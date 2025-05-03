@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="stylesheet" href="styles.css">
+    <title>School Management</title>
+  </head>
+  <body>
+    <header>
+        <h1>Welcome to School Management</h1>
+    </header>
+    <main>
+        <div class="dashboard-grid">
+
+            <!-- Grid Item 1: Teacher Performance -->
+            <div class="grid-item" id="teacher-performance">
+                <h2>Teacher Performance</h2>
+                <button id="fetch-performance">Fetch Performance</button>
+                <div id="download-container"></div>
+                <p id="performance-result"></p>
+                <table border="1" style="width: 100%; text-align: left;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Feedback Score</th>
+                            <th>Attendance %</th>
+                            <th>Result %</th>
+                            <th>Activity Score</th>
+                            <th>Final Score</th>
+                            <th>Rating</th>
+                            <th>AI Suggestion</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacher-performance-body">
+                        <!-- Data will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Grid Item 2: Fees Reminder -->
+            <div class="grid-item" id="fees-reminder">
+                <h2>Fees Reminder</h2>
+                <button id="fetch-pending-button">Show Pending Fees</button>
+                <p id="pending-fees-status"></p>
+                <table border="1" style="width: 100%; text-align: left; display: none; margin-top: 10px;" id="pending-fees-display-table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Parent Name</th>
+                            <th>Amount Due</th>
+                            <th>Due Date</th>
+                            <th>Parent Email</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pending-fees-display-body">
+                        <!-- Pending fee data will be dynamically inserted here -->
+                    </tbody>
+                </table>
+                <button id="send-all-reminders-button" style="display: none; margin-top: 10px;">Send All Reminders</button>
+                <p id="reminder-result"></p>
+                <table border="1" style="width: 100%; text-align: left; display: none; margin-top: 10px;" id="sent-reminders-table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Parent Email</th>
+                            <th>Due Date</th>
+                            <th>Sent Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sent-reminders-body">
+                        <!-- Sent reminder details will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Grid Item 3: Add Student -->
+            <div class="grid-item" id="add-student-section">
+                <h2>Add New Student</h2>
+                <button id="show-add-student-form-btn">Add Student</button>
+                <form id="add-student-form" style="display: none; margin-top: 15px; padding: 15px; border: 1px solid #ccc;">
+                    <h3>Student Details</h3>
+                    <label for="student-name">Student Name:</label>
+                    <input type="text" id="student-name" name="student_name" required><br><br>
+
+                    <label for="student-class">Class:</label>
+                    <input type="text" id="student-class" name="student_class"><br><br>
+                    
+                    <!-- Add other student fields as needed -->
+
+                    <h3>Parent Details</h3>
+                    <label for="parent-name">Parent Name:</label>
+                    <input type="text" id="parent-name" name="parent_name" required><br><br>
+
+                    <label for="parent-email">Parent Email:</label>
+                    <input type="email" id="parent-email" name="parent_email" required><br><br>
+
+                    <label for="parent-phone">Parent Phone (Optional):</label>
+                    <input type="tel" id="parent-phone" name="parent_phone"><br><br>
+
+                    <h3>Initial Fee Details (Optional)</h3>
+                    <label for="fee-amount">Initial Fee Amount:</label>
+                    <input type="number" id="fee-amount" name="fee_amount" step="0.01" min="0"><br><br>
+
+                    <label for="fee-due-date">Fee Due Date:</label>
+                    <input type="date" id="fee-due-date" name="fee_due_date"><br><br>
+
+                    <button type="submit">Save Student</button>
+                    <p id="add-student-message" style="margin-top: 10px;"></p>
+                </form>
+            </div>
+
+            <!-- Grid Item 4: Student Details -->
+            <div class="grid-item" id="student-details-section">
+                <h2>Student Details</h2>
+                <button id="fetch-students-button">Show Students</button>
+                <p id="student-details-status"></p>
+                <table border="1" style="width: 100%; text-align: left; display: none; margin-top: 10px;" id="student-details-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Parent Name</th>
+                            <th>Parent Email</th>
+                            <th>Parent Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-details-body">
+                        <!-- Student data will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </main>
+    <script src="scripts.js"></script>
+  </body>
+</html>
