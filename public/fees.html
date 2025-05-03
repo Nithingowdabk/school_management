@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="stylesheet" href="/styles.css">
+    <title>Fees Management - School Management</title>
+</head>
+<body>
+    <header>
+        <h1><a href="/" class="home-link">School Management Dashboard</a></h1>
+    </header>
+    <main>
+        <div class="content-section" id="fees-reminder">
+            <h2>Fees Management</h2>
+            <!-- Button removed, data will load automatically -->
+            <p id="pending-fees-status">Loading pending fees...</p>
+            <div class="table-container">
+                <table id="pending-fees-display-table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Parent Name</th>
+                            <th>Amount Due</th>
+                            <th>Due Date</th>
+                            <th>Parent Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pending-fees-display-body">
+                        <!-- Pending fees will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+            <button id="send-all-reminders-button" style="display: none; margin-top: 10px;">Send All Reminders</button>
+            <p id="reminder-result"></p>
+            <div class="table-container">
+                <table id="sent-reminders-table" style="display: none; margin-top: 10px;">
+                    <caption>Sent Reminders</caption>
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Parent Email</th>
+                            <th>Due Date</th>
+                            <th>Sent Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sent-reminders-body">
+                        <!-- Sent reminder details will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <script src="/scripts.js"></script>
+</body>
+</html>

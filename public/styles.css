@@ -79,13 +79,20 @@ button:hover {
     margin-bottom: 0.5rem; /* Add some space below buttons */
 }
 
+/* Table container for horizontal scrolling */
+.table-container {
+    overflow-x: auto; /* Add horizontal scrollbar if table is too wide */
+    margin-top: 1rem; /* Add some space above the table container */
+}
+
 /* Table styles within grid items */
 .grid-item table {
     width: 100%;
+    min-width: 600px; /* Set a minimum width to prevent excessive squishing */
     border-collapse: collapse;
-    margin-top: 1rem;
 }
 
+/* Table styles within grid items */
 .grid-item th, .grid-item td {
     border: 1px solid #ddd;
     padding: 0.5rem;
@@ -153,5 +160,149 @@ button:hover {
 @media (max-width: 900px) {
     .dashboard-grid {
         grid-template-columns: 1fr; /* Stack items on smaller screens */
+    }
+}
+
+/* Styles for the main dashboard menu on index.html */
+.dashboard-menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+    gap: 1.5rem;
+    padding: 2rem;
+    list-style: none;
+    margin: 0;
+}
+
+.menu-item {
+    display: block; /* Make the anchor fill the grid cell */
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit; /* Inherit text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menu-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.menu-item h2 {
+    margin-top: 0;
+    color: #0056b3;
+    font-size: 1.4em;
+    margin-bottom: 0.5rem;
+}
+
+.menu-item p {
+    color: #555;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+/* Styles for the content sections on individual pages */
+.content-section {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 2rem; /* Add margin around the content section */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.content-section h2 {
+    margin-top: 0;
+    color: #0056b3;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Add a class for the home link in headers of sub-pages */
+.home-link {
+    color: inherit; /* Make header link white */
+    text-decoration: none;
+}
+
+.home-link:hover {
+    text-decoration: underline;
+}
+
+/* Table styles within content sections (Adjusted from .grid-item table) */
+.content-section table {
+    width: 100%;
+    min-width: 600px; /* Set a minimum width */
+    border-collapse: collapse;
+}
+
+.content-section th, .content-section td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.content-section th {
+    background-color: #f8f9fa;
+}
+
+/* Form styling within content sections (Adjusted from .grid-item form) */
+.content-section form label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+}
+
+.content-section form input[type="text"],
+.content-section form input[type="email"],
+.content-section form input[type="tel"],
+.content-section form input[type="number"],
+.content-section form input[type="date"] {
+    width: calc(100% - 1rem); /* Adjust width considering padding */
+    padding: 0.5rem;
+    margin-bottom: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.content-section form button[type="submit"] {
+    margin-top: 0.5rem;
+}
+
+/* Status messages (Adjusted from .grid-item p) */
+.content-section p[id$="-status"], 
+.content-section p[id$="-result"], 
+.content-section p[id$="-message"] {
+    margin-top: 0.5rem;
+    min-height: 1.2em; /* Prevent layout shifts */
+}
+
+/* Action buttons in tables (Keep this) */
+.delete-student-btn,
+.mark-paid-btn {
+    background-color: #dc3545; /* Red for delete/action */
+    padding: 0.3rem 0.6rem;
+    font-size: 0.9em;
+    color: white; /* Ensure text is visible */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-student-btn:hover,
+.mark-paid-btn:hover {
+    background-color: #c82333;
+}
+
+/* Responsive adjustments (Keep or adjust as needed) */
+@media (max-width: 900px) {
+    /* Adjust dashboard menu for smaller screens if needed */
+    .dashboard-menu {
+        grid-template-columns: 1fr; /* Stack menu items */
+    }
+    .content-section {
+        margin: 1rem; /* Reduce margin on smaller screens */
     }
 }

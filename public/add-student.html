@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="stylesheet" href="/styles.css">
+    <title>Add Student - School Management</title>
+</head>
+<body>
+    <header>
+        <h1><a href="/" class="home-link">School Management Dashboard</a></h1>
+    </header>
+    <main>
+        <div class="content-section" id="add-student-section">
+            <h2>Add New Student</h2>
+            <!-- Button removed, form is shown by default -->
+            <form id="add-student-form" style="margin-top: 10px;">
+                <label for="student_name">Student Name:</label>
+                <input type="text" id="student_name" name="student_name" required><br><br>
+
+                <label for="student_class">Class:</label>
+                <input type="text" id="student_class" name="student_class"><br><br>
+
+                <label for="parent_name">Parent Name:</label>
+                <input type="text" id="parent_name" name="parent_name" required><br><br>
+
+                <label for="parent_email">Parent Email:</label>
+                <input type="email" id="parent_email" name="parent_email" required><br><br>
+
+                <label for="parent_phone">Parent Phone:</label>
+                <input type="tel" id="parent_phone" name="parent_phone"><br><br>
+
+                <label for="fee_amount">Initial Fee Amount (Optional):</label>
+                <input type="number" step="0.01" id="fee_amount" name="fee_amount"><br><br>
+
+                <label for="fee_due_date">Fee Due Date (Optional):</label>
+                <input type="date" id="fee_due_date" name="fee_due_date"><br><br>
+
+                <button type="submit">Add Student</button>
+            </form>
+            <p id="add-student-message" style="margin-top: 10px;"></p>
+        </div>
+    </main>
+    <script src="/scripts.js"></script>
+</body>
+</html>

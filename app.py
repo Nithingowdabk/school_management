@@ -156,11 +156,10 @@ def teacher_performance():
 # Renamed from /api/fees-reminder
 @app.route('/api/send-all-reminders', methods=['POST'])
 def send_all_reminders():
-    """Endpoint to fetch all pending fee records and send a reminder email for each."""
-    reminders_sent_info = [] # Keep track of sent reminders
+    """Endpoint to send reminders in rounds: only to those with the minimum reminder_count among unpaid fees."""
+    reminders_sent_info = []
     fee_records_from_db = []
     try:
-        # Connect to the MySQL database
         connection = mysql.connector.connect(
             host=DB_CONFIG["host"],
             user=DB_CONFIG["user"],
@@ -168,17 +167,21 @@ def send_all_reminders():
             database=DB_CONFIG["database"]
         )
         cursor = connection.cursor(dictionary=True)
-        print("Executing query to fetch pending fee records for sending...")
+        # Find the minimum reminder_count among unpaid fees
         cursor.execute("""
-            SELECT student_name, parent_name, amount_due, due_date, parent_email, payment_status
+            SELECT MIN(IFNULL(reminder_count, 0)) AS min_reminder_count
             FROM fees
             WHERE payment_status = 'Pending'
         """)
+        min_row = cursor.fetchone()
+        min_reminder_count = min_row['min_reminder_count'] if min_row else 0
+        # Fetch only those with the minimum reminder_count
+        cursor.execute("""
+            SELECT id, student_name, parent_name, amount_due, due_date, parent_email, payment_status, reminder_count
+            FROM fees
+            WHERE payment_status = 'Pending' AND IFNULL(reminder_count, 0) = %s
+        """, (min_reminder_count,))
         fee_records_from_db = cursor.fetchall()
-        print(f"Query executed successfully. Fetched {len(fee_records_from_db)} records for sending.")
-        cursor.close()
-        connection.close()
-
     except mysql.connector.Error as err:
         print(f"Database error: {err}")
         return jsonify({"error": "Database connection or query failed", "details": str(err)}), 500
@@ -186,31 +189,27 @@ def send_all_reminders():
         print(f"An unexpected error occurred: {e}")
         return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
 
-    # Process fetched records and send reminders
     today = datetime.now().date()
     processed_records_count = 0
     reminders_sent_count = 0
 
     for record_data in fee_records_from_db:
         processed_records_count += 1
-        due_date_str = "N/A" # Default in case parsing fails
+        due_date_str = "N/A"
         if 'due_date' in record_data and record_data['due_date']:
             due_date = record_data['due_date']
             if isinstance(due_date, datetime):
                 due_date_obj = due_date.date()
                 due_date_str = due_date_obj.strftime('%Y-%m-%d')
             elif isinstance(due_date, str):
-                 try:
-                     due_date_obj = datetime.strptime(due_date, '%Y-%m-%d').date() # Adjust format if needed
-                     due_date_str = due_date_obj.strftime('%Y-%m-%d')
-                 except ValueError:
-                     print(f"Could not parse date string: {record_data['due_date']} for student {record_data['student_name']}")
-                     due_date_str = str(record_data['due_date']) # Use original string if parsing fails
-            elif hasattr(due_date, 'isoformat'): # Handle date objects
+                try:
+                    due_date_obj = datetime.strptime(due_date, '%Y-%m-%d').date()
+                    due_date_str = due_date_obj.strftime('%Y-%m-%d')
+                except ValueError:
+                    due_date_str = str(record_data['due_date'])
+            elif hasattr(due_date, 'isoformat'):
                 due_date_obj = due_date
                 due_date_str = due_date.isoformat()
-
-        # Construct email
         subject = f"Reminder: Outstanding Fee Payment for {record_data['student_name']}"
         body = (
             f"Dear {record_data['parent_name']},\n\n"
@@ -219,13 +218,9 @@ def send_all_reminders():
             f"Please make the payment as soon as possible.\n\n"
             f"Thank you,\nSchool Administration"
         )
-
-        # Send email
-        print(f"Attempting to send reminder to {record_data['parent_email']} for student {record_data['student_name']}")
         try:
             send_email_notification(record_data['parent_email'], subject, body)
             reminders_sent_count += 1
-            # Record sent info
             reminders_sent_info.append({
                 "student_name": record_data['student_name'],
                 "parent_email": record_data['parent_email'],
@@ -233,12 +228,33 @@ def send_all_reminders():
                 "reminder_type": "Outstanding Fee Reminder",
                 "sent_date": today.isoformat()
             })
+            # Update reminder_count in the database
+            try:
+                update_conn = mysql.connector.connect(
+                    host=DB_CONFIG["host"],
+                    user=DB_CONFIG["user"],
+                    password=DB_CONFIG["password"],
+                    database=DB_CONFIG["database"]
+                )
+                update_cursor = update_conn.cursor()
+                update_cursor.execute(
+                    "UPDATE fees SET reminder_count = IFNULL(reminder_count, 0) + 1 WHERE id = %s",
+                    (record_data['id'],)
+                )
+                update_conn.commit()
+                update_cursor.close()
+                update_conn.close()
+            except Exception as update_err:
+                print(f"Failed to update reminder_count for fee id {record_data['id']}: {update_err}")
         except Exception as email_err:
-             print(f"Failed to send email to {record_data['parent_email']} for student {record_data['student_name']}: {email_err}")
-             # Optionally record failed attempts if needed
-
+            print(f"Failed to send email to {record_data['parent_email']} for student {record_data['student_name']}: {email_err}")
+    try:
+        cursor.close()
+        connection.close()
+    except Exception:
+        pass
     return jsonify({
-        "message": f"Processed {processed_records_count} pending fee records. Sent {reminders_sent_count} reminders.",
+        "message": f"Processed {processed_records_count} pending fee records (reminder round {min_reminder_count+1}). Sent {reminders_sent_count} reminders.",
         "reminders_sent_details": reminders_sent_info
     })
 
